@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 DESAFIO BIG DATA/BI
 
 📌 ESCOPO DO DESAFIO
@@ -55,3 +56,6 @@ nome do email: DESAFIO MINSAIT BI/BIGDATA (Aluno)
 dentro deste email o zip e o link para o github onde estará o projeto.
 prazo: ate <b>08/04/2023<b>
 nesse caso não poderei aceitar atrasos na entrega.
+=======
+# desafio_indra
+>>>>>>> ec810790d442944b00fe30d4b7d3756dc816f20b
