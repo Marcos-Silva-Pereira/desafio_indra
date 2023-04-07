@@ -1,8 +1,8 @@
-CREATE EXTERNAL TABLE IF NOT EXISTS desafio_curso.TBL_REGIAO ( 
+CREATE EXTERNAL TABLE IF NOT EXISTS desafio_curso.tbl_regiao ( 
 region_code string,
 region_name string
 )
-COMMENT 'TBL_REGIAO'
+COMMENT 'tbl_regiao'
 ROW FORMAT DELIMITED
 FIELDS TERMINATED BY ';'
 STORED AS TEXTFILE

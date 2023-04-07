@@ -1,4 +1,4 @@
-CREATE EXTERNAL TABLE IF NOT EXISTS desafio_curso.TBL_ENDERECO ( 
+CREATE EXTERNAL TABLE IF NOT EXISTS desafio_curso.tbl_endereco( 
 address_number string,
 city string,
 country string,
@@ -9,7 +9,7 @@ customer_address_4 string,
 state string,
 zip_code string
 )
-COMMENT 'TBL_ENDERECO'
+COMMENT 'tbl_endereco'
 ROW FORMAT DELIMITED
 FIELDS TERMINATED BY ';'
 STORED AS TEXTFILE

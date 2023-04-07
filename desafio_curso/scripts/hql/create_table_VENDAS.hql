@@ -1,4 +1,4 @@
-CREATE EXTERNAL TABLE IF NOT EXISTS desafio_curso.TBL_VENDAS ( 
+CREATE EXTERNAL TABLE IF NOT EXISTS desafio_curso.tbl_vendas ( 
 actual_delivery_date string,
 customer_Key string,
 date_Key string,
@@ -21,7 +21,7 @@ sales_quantity string,
 sales_rep string,
 u_m string
 )
-COMMENT 'TBL_VENDAS'
+COMMENT 'tbl_vendas'
 ROW FORMAT DELIMITED
 FIELDS TERMINATED BY ';'
 STORED AS TEXTFILE

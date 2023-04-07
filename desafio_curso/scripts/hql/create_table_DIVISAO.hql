@@ -1,8 +1,8 @@
-CREATE EXTERNAL TABLE IF NOT EXISTS desafio_curso.TBL_DIVISAO ( 
+CREATE EXTERNAL TABLE IF NOT EXISTS desafio_curso.tbl_divisao ( 
 division string,
 division_name string
 )
-COMMENT 'TBL_DIVISAO'
+COMMENT 'tbl_divisao'
 ROW FORMAT DELIMITED
 FIELDS TERMINATED BY ';'
 STORED AS TEXTFILE

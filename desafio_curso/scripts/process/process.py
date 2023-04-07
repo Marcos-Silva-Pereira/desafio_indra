@@ -5,6 +5,7 @@ from pyspark.sql import HiveContext
 from pyspark.sql.functions import *
 from pyspark.sql import functions as f
 from pyspark.sql.functions import asc,desc
+from pyspark.sql.functions import regexp_replace
 import os
 import re
 
@@ -25,7 +26,7 @@ df_vendas = spark.sql("select * from desafio_curso.tbl_vendas")
 df_endereco = df_endereco.where(df_endereco.city != 'City')
 
 # mudando o tipo das colunas
-li = ["address_number", "zip_code"]
+li = ["address_number"]
 for x in li:
     df_endereco = df_endereco.withColumn(x, df_endereco[x].cast(IntegerType()))
 
@@ -33,9 +34,6 @@ for x in li:
 for z in df_endereco.dtypes:
     if re.search("int", z[1]) :
         df_endereco = df_endereco.withColumn(z[0], when(df_endereco[z[0]].isNull(), 0)\
-                                            .otherwise(df_endereco[z[0]]))
-    if re.search("double", z[1]):
-        df_endereco = df_endereco.withColumn(z[0], when(df_endereco[z[0]].isNull(), 0.0)\
                                             .otherwise(df_endereco[z[0]]))
     else:
         df_endereco = df_endereco.withColumn(z[0], trim(df_endereco[z[0]]))
@@ -57,9 +55,6 @@ for z in df_divisao.dtypes:
     if re.search("int", z[1]) :
         df_divisao = df_divisao.withColumn(z[0], when(df_divisao[z[0]].isNull(), 0)\
                                             .otherwise(df_divisao[z[0]]))
-    if re.search("double", z[1]):
-        df_divisao = df_divisao.withColumn(z[0], when(df_divisao[z[0]].isNull(), 0.0)\
-                                            .otherwise(df_divisao[z[0]]))
     else:
         df_divisao = df_divisao.withColumn(z[0], trim(df_divisao[z[0]]))
         df_divisao = df_divisao.withColumn(z[0], when(df_divisao[z[0]] == '', 'Não informado')\
@@ -79,9 +74,6 @@ for x in li:
 for z in df_clientes.dtypes:
     if re.search("int", z[1]) :
         df_clientes = df_clientes.withColumn(z[0], when(df_clientes[z[0]].isNull(), 0)\
-                                            .otherwise(df_clientes[z[0]]))
-    if re.search("double", z[1]):
-        df_clientes = df_clientes.withColumn(z[0], when(df_clientes[z[0]].isNull(), 0.0)\
                                             .otherwise(df_clientes[z[0]]))
     else:
         df_clientes = df_clientes.withColumn(z[0], trim(df_clientes[z[0]]))
@@ -103,9 +95,6 @@ for z in df_regiao.dtypes:
     if re.search("int", z[1]) :
         df_regiao = df_regiao.withColumn(z[0], when(df_regiao[z[0]].isNull(), 0)\
                                             .otherwise(df_regiao[z[0]]))
-    if re.search("double", z[1]):
-        df_regiao = df_regiao.withColumn(z[0], when(df_regiao[z[0]].isNull(), 0.0)\
-                                            .otherwise(df_regiao[z[0]]))
     else:
         df_regiao = df_regiao.withColumn(z[0], trim(df_regiao[z[0]]))
         df_regiao = df_regiao.withColumn(z[0], when(df_regiao[z[0]] == '', 'Não informado')\
@@ -125,6 +114,7 @@ for x in li:
 # double
 lf = ["discount_amount", "list_price", "sales_amount", "sales_amount_based_on_list_price", "sales_cost_amount", "sales_margin_amount", "sales_price"]
 for y in lf:
+    df_vendas = df_vendas.withColumn(y, regexp_replace(y, ',', '.'))
     df_vendas = df_vendas.withColumn(y, df_vendas[y].cast(DoubleType()))
 
 # substituindo valores nulos e vazios por 0, e strings vazias por 'Não informado'
@@ -140,7 +130,6 @@ for z in df_vendas.dtypes:
         df_vendas = df_vendas.withColumn(z[0], when(df_vendas[z[0]] == '', 'Não informado')\
                                             .when(df_vendas[z[0]].isNull(), 'Não informado')  
                                             .otherwise(df_vendas[z[0]]))
-
 
 # Juntando a tabela cliente e vendas, selecionando colunas especificas
 c = df_clientes.select(df_clientes.customer_key, df_clientes.division, df_clientes.address_number, df_clientes.region_code, df_clientes.customer, df_clientes.phone)
@@ -162,26 +151,57 @@ df1 = df1.withColumn('trimester',
 e = df_endereco.select(df_endereco.address_number, df_endereco.country, df_endereco.state, df_endereco.city)
 
 df2 = df1.join(e, df1.address_number == e.address_number, "left")
-df2 = df2.drop(e.address_number)
+df2 = df2.drop(df1.address_number)
 
 # unindo com a tabela divisao
 df3 = df2.join(df_divisao, df2.division == df_divisao.division, "left")
 df3 = df3.drop(df_divisao.division)
 
-# unindo com a tabela regiao
-df4 = df3.join(df_regiao, df3.region_code == df_regiao.region_code, "left")
-df4 = df4.drop(df_regiao.region_code)
+# unindo com a tabela regiao, finalizando a stage
+df_stage = df3.join(df_regiao, df3.region_code == df_regiao.region_code, "left")
+df_stage = df_stage.drop(df_regiao.region_code)
 
-# Tratar a stage
-df4 = df4.drop('customer_key', 'division', 'address_number', 'region_code')
+# Tratando df_stage
+# substituindo valores nulos e vazios por 0, e strings vazias por 'Não informado'
+for z in df_stage.dtypes:
+    if re.search("int", z[1]) or  re.search("double", z[1]):
+        df_stage = df_stage.withColumn(z[0], when(df_stage[z[0]].isNull(), 0)\
+                                            .otherwise(df_stage[z[0]]))
+    else:
+        df_stage = df_stage.withColumn(z[0], when(df_stage[z[0]] == '', 'Não informado')\
+                                            .when(df_stage[z[0]].isNull(), 'Não informado')  
+                                            .otherwise(df_stage[z[0]]))
 
-# criando o fato
-ft_vendas = []
+# Criando a chave PK_CLIENTE
+df_stage = df_stage.withColumn('PK_CLIENTES', sha2(concat_ws("", df_stage.customer, df_stage.phone,df_stage.division,df_stage.region_code), 256))
 
-#criando as dimensões
-dim_clientes = []
-dim_tempo = []
-dim_localidade = []
+# Criando a chave PK_LOCALIDADE
+df_stage = df_stage.withColumn('PK_LOCALIDADE', sha2(concat_ws("", df_stage.country, df_stage.state, df_stage.city), 256))
+
+# Criando a chave PK_TEMPO
+df_stage = df_stage.withColumn('PK_TEMPO', sha2(concat_ws("",df_stage.invoice_date,df_stage.day,df_stage.month,df_stage.year,df_stage.trimester), 256))
+
+df_stage.createOrReplaceTempView("stage")
+
+spark.sql("select * from stage")
+
+# criando a fato
+ft_pedidos = spark.sql("SELECT PK_CLIENTES, PK_LOCALIDADE, PK_TEMPO, COUNT(sales_quantity) AS QUANTIDADE, SUM(sales_amount) as VALOR_TOTAL, SUM(sales_price) as VALOR_DE_VENDA from stage group by PK_CLIENTES, PK_LOCALIDADE, PK_TEMPO")
+
+# criando a dimensao dim_clientes
+dim_clientes = spark.sql("SELECT DISTINCT PK_CLIENTES, customer, phone, region_name, division_name FROM STAGE")
+
+dim_clientes.dropDuplicates()
+
+# criando a dimensao dim_tempo
+dim_tempo = spark.sql("SELECT DISTINCT PK_TEMPO, invoice_date, year, month, day, trimester FROM STAGE")
+
+dim_tempo.dropDuplicates()
+
+# criando a dimensao dim_localidade
+dim_localidade = spark.sql("SELECT DISTINCT PK_LOCALIDADE, country, state, city FROM STAGE")
+
+dim_localidade.dropDuplicates()
 
 # função para salvar os dados
 def salvar_df(df, file):
@@ -201,4 +221,14 @@ def salvar_df(df, file):
     os.system(erase)
     os.system(rename)
 
-salvar_df(dim_clientes, 'dimclientes')
+# salvando ft_pedidos
+salvar_df(ft_pedidos, 'ft_pedidos')
+
+# salvando dim_clientes
+salvar_df(dim_clientes, 'dim_clientes')
+
+# salvando dim_tempo
+salvar_df(dim_tempo, 'dim_tempo')
+
+# salvando dim_localidade
+salvar_df(dim_localidade, 'dim_localidade')
