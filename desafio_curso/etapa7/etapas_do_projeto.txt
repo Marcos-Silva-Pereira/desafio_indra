@@ -1,0 +1,37 @@
+etapa 1
+Utilizei o shellscript de exemplo, alterando o nome do arquivos da lista 'DADOS', colocando o nome dos arquivos .csv da pasta raw.
+E retirei um ../ da ultima linha do shell, pois estava fazendo sair de dentro da pasta 'desafio_curso'. 
+Depois criei os arquivos hql dentro da pasta /hql, utilizando o hql de exemplo, alterando as colunas e trocando o '|' por ';' na 
+linha "fields terminated by".
+
+etapa 2
+Entrei no hive_server e executei o arquivo shell, para fazer a criacao das pastas e das tabelas.
+
+etapa 3, 4 e 5
+No pyspark, fiz o tratamento das tabelas, retirando a primeira linha que era o nome das colunas, 
+mudei o tipo de algumas das colunas de string para integer ou double(no caso de valores com virgula). 
+Retirei os espacos em branco utilizando 'trim' e fiz as modificacoes de '0' para valores integer/double e 'Não informado' para string,
+utilizando 'dtypes' para automatizar esse processo. Fiz o tratamento de dados para todas as tabelas e depois de juntar as 
+tabelas usando join e 'inner'(na primeira, a principal) e 'left' nas outras, 
+tambem fiz o tratamento de dados para a 'stage'. Fiz alguns testes para comparar com o PowerBi, gostaria de ter feito mais testes, 
+porem o tempo foi apertado e nao deu para fazer todos os teste como gostaria. Por fim, criei as chaves, a fato, 
+as dimensoes(dando um dropDuplicates depois só para garantir que nao viria valores duplicados), e utilizei a funcao de salvar 
+e mandar para a pasta 'gold'. 
+Mais informacoes no arquivo 'process.py' dentro de 'desafio_curso/scripts/process'.
+
+etapa 6
+No power BI foi necessario fazer poucas edicoes, como mudar o tipo das colunas, pois o PowerBI banguncou os tipos. 
+As ligacoes entre as fatos e dimenoes ficou de muitos(fato) para um(dimensao), como o esperado. 
+Foi criado alguns graficos e comparar com os valores dos teste (foram feitos 3 testes) no pyspark e os valores bateram.
+
+etapa 7
+esta é a documentacao das etapas, e os testes e prints dos testes estao na pasta 'testes' dentro de 'etapa7'.
+
+Conclusão
+Foi extremamente interessante fazer esste projeto pois, foi possivel colocar em prática o conteudo aprendido nas aulas, 
+alem das pesquisas por conta propria para automatizar o codigo, e com isso adquirir um maior conhecimento, e de ter utilizado 
+outros conhecimentos como o igles para pesquisas em foruns estrangeiros. 
+Foi muito divertido tratar os dados e ver eles do jeito que era para estarem no final, 
+sempre aparece alguns erros, porem é gratificante no final voce ver que tudo deu certo. 
+Agradeço ao professor Caiua pelas aulas excelentes e por toda a atencao que nos deu nas aulas e fora delas.E um agradecimento a Indra 
+por essa oportunidade.
