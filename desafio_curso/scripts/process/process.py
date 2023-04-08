@@ -172,6 +172,16 @@ for z in df_stage.dtypes:
                                             .when(df_stage[z[0]].isNull(), 'Não informado')  
                                             .otherwise(df_stage[z[0]]))
 
+# Teste para comparar com o Power BI
+# teste 01
+df_stage.groupBy('customer').agg(sum('sales_amount')).show(truncate=False)
+
+# teste 02
+df_stage.agg(sum('sales_amount')).collect()
+
+#teste 03
+df_stage.agg(count('sales_quantity')).collect()
+
 # Criando a chave PK_CLIENTE
 df_stage = df_stage.withColumn('PK_CLIENTES', sha2(concat_ws("", df_stage.customer, df_stage.phone,df_stage.division,df_stage.region_code), 256))
 

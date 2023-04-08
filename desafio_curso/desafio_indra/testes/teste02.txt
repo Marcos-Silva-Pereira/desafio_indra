@@ -1,0 +1,4 @@
+# teste 02
+df_stage.agg(sum('sales_amount')).collect()
+
+[Row(sum(sales_amount)=187684405.61999947)] -> print 02

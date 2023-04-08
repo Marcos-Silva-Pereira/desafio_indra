@@ -1,0 +1,23 @@
++----------------------+------------------+
+|customer              |sum(sales_amount) |
++----------------------+------------------+
+|Fokas Midstore        |1829410.9699999979| -> print: 01
+|Xcert Shop            |10296.76          |
+|Capitolnet Supermarket|53071.00999999999 |
+|HBS Shop              |46773.96999999999 |
+|BF Supermarket        |79633.49999999999 |
+|Healtheon Shop        |134809.31000000006|
+|Tartanchase Shop      |2227.82           |
+|A-ARVIN Store         |2937.96           |
+|Livezone Supermarket  |12992.779999999999|
+|Unisys Shop           |7855.889999999999 |
+|Quantex Supermarket   |32579.330000000005|
+|Ra Maxistore          |1192127.8199999996|
+|PAGE Shop             |188720.95         |
+|Labatt Supermarket    |30419.900000000005|
+|ZipLip.Com Shop       |92219.06999999999 |
+|EDC Supermarket       |245292.37000000005|
+|QualServe Shop        |52426.100000000006|
+|Target Store          |14452.669999999998|
+|Kool-Seal Shop        |26231.63          |
++----------------------+------------------+

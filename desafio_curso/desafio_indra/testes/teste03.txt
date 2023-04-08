@@ -1,0 +1,4 @@
+#teste 03
+df_stage.agg(count('sales_quantity')).collect()
+
+[Row(count(sales_quantity)=66872)] -> print 02
